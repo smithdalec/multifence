@@ -7,6 +7,34 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var geofences = require('./routes/geofences');
+
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy;
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
+
+
+// Define a middleware function to be used for every secured routes 
+var auth = function(req, res, next){ 
+  if (!req.isAuthenticated()) 
+    res.send(401);
+  else 
+    next();
+};
 
 var app = express();
 
@@ -23,7 +51,29 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/geofence*', routes);
+
+app.use('/users', auth, users);
+
+app.use('/geofences', geofences);
+
+// route to test if the user is logged in or not 
+app.get('/loggedin', function(req, res) { 
+  res.send(req.isAuthenticated() ? req.user : '0'); 
+}); 
+
+app.get('/login', function(req, res) {
+  res.render('login');
+});
+app.post('/login', passport.authenticate('local'), function(req, res) { 
+  res.send(req.user); 
+}); 
+
+// route to log out 
+app.post('/logout', function(req, res){ 
+  req.logOut(); 
+  res.send(200); 
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
