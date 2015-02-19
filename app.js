@@ -50,12 +50,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// For our AngularJS SPA
 app.use('/', routes);
-app.use('/geofence*', routes);
 
-app.use('/users', auth, users);
-
-app.use('/geofences', geofences);
+// REST resources
+app.use('/api/users', auth, users);
+app.use('/api/geofences', geofences);
 
 // route to test if the user is logged in or not 
 app.get('/loggedin', function(req, res) { 
