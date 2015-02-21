@@ -4,7 +4,7 @@ var GeofenceSchema = new mongoose.Schema({
   nickname: String,
   latitude: Number, default: 0,
   longitude: Number, default: 0,
-  events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GeofenceEvent' }]
+  entries: [{ type: mongoose.Schema.Types.ObjectId, ref: 'GeofenceEntry' }]
 });
 
 mongoose.model('Geofence', GeofenceSchema);

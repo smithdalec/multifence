@@ -20,7 +20,7 @@ function($stateProvider, $urlRouterProvider) {
       controller: "MainCtrl"
     })
     .state('geofences', {
-      url: "/geofences/{id}",
+      url: "/geofences/{_id}",
       templateUrl: "geofence.html",
       controller: "GeofenceCtrl"
     });
@@ -34,7 +34,13 @@ function($stateProvider, $urlRouterProvider) {
 app.factory('Geofences', [
 '$resource',
 function($resource) {
-  return $resource('/api/geofences/:id')
+  return $resource('/api/geofences/:_id', {}, {
+    enter: {
+      method: 'PUT',
+      params: {_id: '@_id'},
+      url: '/api/geofences/:_id/enter'
+    }
+  });
 }]);
 
 
@@ -82,7 +88,21 @@ app.controller('GeofenceCtrl', [
 '$stateParams',
 'Geofences',
 function($scope, $stateParams, Geofences) {
-  Geofences.get({ id: $stateParams.id }, function(data) {
+  Geofences.get({ _id: $stateParams._id }, function(data) {
     $scope.geofence = data;
+    
+    $scope.geofence.events = [];
+    
+    for (var i in data.entries) {
+      $scope.geofence.events.push({date: data.entries[i].date, message: "entered geofence"});
+    }
+    
+    $scope.simulateEnter = function() {
+      Geofences.enter($scope.geofence, function(entry) {
+        $scope.geofence.events.push(entry);
+      });
+    };
+    
   });
+  
 }]);

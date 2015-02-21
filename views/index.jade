@@ -6,7 +6,7 @@ block content
   script(type="text/ng-template", id="home.html")
     h2 {{ pageTitle }}
     form(ng-submit="addGeofence()")
-      table(class="table")
+      table.table
         thead
           tr
             th Nickname
@@ -31,21 +31,30 @@ block content
               button(type="submit").btn.btn-success Add geofence
 
   script(type="text/ng-template", id="geofence.html")
-    h2 {{ pageTitle }}
+    h2 {{ geofence.nickname }}
     
-    h3 Latitude
-    {{ geofence.latitude }}
+    dl.dl-horizontal
+      dt Latitude
+      dd {{ geofence.latitude }}
+      
+      dt Longitude
+      dd {{ geofence.longitude }}
 
-    h3 Longitude
-    {{ geofence.longitude }}
-
-    h3 Events
-    table
-      thead
-        tr
-          th Date/Time
-          th Message
-      tbody
-        tr(ng-repeat="event in geofence.events")
-          td {{ event.date }}
-          td {{ event.message }}
+      dt Events
+      dd
+        table.table
+          thead
+            tr
+              th Date/Time
+              th Message
+          tbody
+            tr(ng-repeat="event in geofence.events")
+              td {{ event.date }}
+              td {{ event.message }}
+            tr
+              td
+              td
+    form(ng-submit="simulateEnter()")
+      button(type="submit").btn.btn-default Simulate Geofence Enter
+    form(ng-submit="simulateExit()")
+      button(type="submit").btn.btn-default Simulate Geofence Exit
