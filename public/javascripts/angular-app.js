@@ -45,6 +45,7 @@ app.controller('MainCtrl', [
 '$scope', 
 'Geofences', 
 function($scope, Geofences) {
+  $scope.pageTitle = "Your Geofences";
   
   Geofences.query(function(data) {
     // Send the geofences data to the view

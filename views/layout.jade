@@ -9,5 +9,10 @@ html(ng-app="multifence")
     script(src='/javascripts/angular-app.js')
     //- script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
   
-  body(class="container")
-    block content
+  body
+    nav.navbar.navbar-inverse.navbar-static-top
+      div.container
+        div.navbar-header
+          a.navbar-brand Multifence
+    div.content-wrapper.container
+      block content

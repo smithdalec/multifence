@@ -1,11 +1,10 @@
 extends layout
 
 block content
-  div.page-header
-    h1= title
   div(ui-view)
 
   script(type="text/ng-template", id="home.html")
+    h2 {{ pageTitle }}
     form(ng-submit="addGeofence()")
       table(class="table")
         thead
@@ -15,11 +14,12 @@ block content
             th Longitude
             th Actions
           tr(ng-repeat="geofence in geofences")
-            td {{ geofence.nickname }}
+            td 
+              a(href="#/geofences/{{ geofence._id }}") {{ geofence.nickname }}
             td {{ geofence.latitude }}
             td {{ geofence.longitude }}
             td
-              a(href="#").text-danger Delete
+              a(href="#/geofences/{{ geofence._id }}").text-danger Delete
           tr
             td
               input(type="text", ng-model="nickname", placeholder="Enter nickname").form-control
@@ -31,7 +31,7 @@ block content
               button(type="submit").btn.btn-success Add geofence
 
   script(type="text/ng-template", id="geofence.html")
-    h2 Geofence detail
+    h2 {{ pageTitle }}
     
     h3 Latitude
     {{ geofence.latitude }}
