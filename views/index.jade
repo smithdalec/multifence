@@ -6,12 +6,29 @@ block content
   div(ui-view)
 
   script(type="text/ng-template", id="home.html")
-    div(ng-repeat="geofence in geofences").
-      Latitude: {{ geofence.latitude }}, Longitude: {{geofence.longitude}}
     form(ng-submit="addGeofence()")
-      input(type="text", ng-model="latitude")
-      input(type="text", ng-model="longitude")
-      button(type="submit").btn.btn-default Add geofence
+      table(class="table")
+        thead
+          tr
+            th Nickname
+            th Latitude
+            th Longitude
+            th Actions
+          tr(ng-repeat="geofence in geofences")
+            td {{ geofence.nickname }}
+            td {{ geofence.latitude }}
+            td {{ geofence.longitude }}
+            td
+              a(href="#").text-danger Delete
+          tr
+            td
+              input(type="text", ng-model="nickname", placeholder="Enter nickname").form-control
+            td
+              input(type="text", ng-model="latitude", placeholder="Enter Latitude").form-control
+            td
+              input(type="text", ng-model="longitude", placeholder="Enter Longitude").form-control
+            td
+              button(type="submit").btn.btn-success Add geofence
 
   script(type="text/ng-template", id="geofence.html")
     h2 Geofence detail

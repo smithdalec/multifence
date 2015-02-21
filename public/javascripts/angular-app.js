@@ -56,6 +56,7 @@ function($scope, Geofences) {
     // If lat/long are actually numbers, submit them to our list of geofences
     if (!isNaN($scope.latitude) && !isNaN($scope.longitude)) {
       var geofence = {
+        nickname: $scope.nickname,
         latitude: $scope.latitude, 
         longitude: $scope.longitude
       };
@@ -64,6 +65,10 @@ function($scope, Geofences) {
       $scope.geofences.push(geofence);
       // Send a POST to save the geofence in the db
       Geofences.save(geofence);
+    }
+    else {
+      // TODO something more user-friendly
+      alert('Invalid latitude/longitude')
     }
   };
   
