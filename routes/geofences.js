@@ -6,7 +6,7 @@ var Geofence = mongoose.model('Geofence');
 var GeofenceEntry = mongoose.model('GeofenceEntry');
 
 /**
- * GET /api/geofence
+ * GET /api/geofences
  * Get a list of geofences
  */
 router.get('/', function(req, res, next) {
@@ -25,18 +25,6 @@ router.get('/', function(req, res, next) {
 
 
 /**
- * GET /api/geofence/{geofence}
- * Get data for a single geofence
- */
-router.get('/:geofence', function(req, res, next) {
-  req.geofence.populate('entries', function(err, geofence) {
-    if(err){ return next(err); }
-    res.json(req.geofence);
-  });
-});
-
-
-/**
  * POST api/geofences
  * Insert a geofence
  */
@@ -51,6 +39,27 @@ router.post('/', function(req, res, next) {
   
 });
 
+
+/**
+ * GET /api/geofence/{geofence}
+ * Get data for a single geofence
+ */
+router.get('/:geofence', function(req, res, next) {
+  req.geofence.populate('entries', function(err, geofence) {
+    if(err){ return next(err); }
+    
+    req.geofence.populate('exits', function(err, geofence) {
+      if(err){ return next(err); }
+      res.json(req.geofence);
+    });
+  });
+});
+
+
+/**
+ * PUT api/geofences/{geofence}/enter
+ * Add an enter event to a geofence
+ */
 router.put('/:geofence/enter', function(req, res, next) {
   var entry = new GeofenceEntry();
   
@@ -64,8 +73,32 @@ router.put('/:geofence/enter', function(req, res, next) {
       if (err) { return next(err); }
       res.json(entry);
     });
-  })
-})
+  });
+});
+
+
+/**
+ * PUT api/geofences/{geofence}/exit
+ * Add an exit event to a geofence
+ */
+router.put('/:geofence/exit', function(req, res, next) {
+  var exit = new GeofenceEntry();
+  
+  exit.geofence = req.geofence;
+  
+  // TODO later: find out why the "exit" collection in mongo isn't being persisted.
+  console.log(exit);
+  exit.save(function(err, exit) {
+    if (err) { return next(err); }
+    console.log(exit);
+    
+    req.geofence.exits.push(exit);
+    req.geofence.save(function(err, geofence) {
+      if (err) { return next(err); }
+      res.json(exit);
+    });
+  });
+});
 
 
 /**

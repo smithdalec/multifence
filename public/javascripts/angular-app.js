@@ -39,6 +39,11 @@ function($resource) {
       method: 'PUT',
       params: {_id: '@_id'},
       url: '/api/geofences/:_id/enter'
+    },
+    exit: {
+      method: 'PUT',
+      params: {_id: '@_id'},
+      url: '/api/geofences/:_id/exit'
     }
   });
 }]);
@@ -97,9 +102,19 @@ function($scope, $stateParams, Geofences) {
       $scope.geofence.events.push({date: data.entries[i].date, message: "entered geofence"});
     }
     
+    for (var i in data.exits) {
+      $scope.geofence.events.push({date: data.exits[i].date, message: "exited geofence"});
+    }
+    
     $scope.simulateEnter = function() {
       Geofences.enter($scope.geofence, function(entry) {
         $scope.geofence.events.push(entry);
+      });
+    };
+    
+    $scope.simulateExit = function() {
+      Geofences.exit($scope.geofence, function(exit) {
+        $scope.geofence.events.push(exit);
       });
     };
     

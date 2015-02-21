@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 require('./models/Geofences');
 require('./models/GeofenceEntries');
+require('./models/GeofenceExits');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
